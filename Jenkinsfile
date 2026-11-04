@@ -77,8 +77,8 @@ pipeline {
             '''
         }
     }
-    }
-
+  }
+}
     post {
         success {
             echo 'CI Pipeline completed successfully. Docker image pushed to ECR.'
