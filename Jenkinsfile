@@ -11,7 +11,18 @@ pipeline {
     }
 
     stages {
-
+          stage('Test Application EC2 SSH') {
+    steps {
+        sshagent(credentials: ['app-server-ssh']) {
+            sh '''
+                ssh -o StrictHostKeyChecking=no \
+                -o BatchMode=yes \
+                ubuntu@172.31.1.224 \
+                "hostname && echo SSH Connection Successful"
+            '''
+        }
+    }
+}
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -111,16 +122,13 @@ pipeline {
 
         sshagent(credentials: ['app-server-ssh']) {
             sh '''
-                ssh -o BatchMode=yes \
-                    ubuntu@$172.31.1.224 \
-                    "sudo /opt/blue-green/rollback.sh blue" \
-                    || echo "Automatic rollback command failed. Check Application EC2."
+                ssh -o StrictHostKeyChecking=no \
+                -o BatchMode=yes \
+                ubuntu@172.31.1.224 \
+                "sudo /opt/blue-green/rollback.sh blue" \
+                || echo "Automatic rollback command failed. Check Application EC2."
             '''
         }
-    }
-
-    always {
-        echo 'Pipeline execution finished.'
     }
 }
 }
