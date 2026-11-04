@@ -94,16 +94,25 @@ pipeline {
 }
 
     post {
-        success {
-            echo 'CI Pipeline completed successfully. Docker image pushed to ECR.'
-        }
+    success {
+        echo 'Deployment completed successfully.'
+    }
 
-        failure {
-            echo 'CI Pipeline failed. Check the Jenkins console output.'
-        }
+    failure {
+        echo 'Deployment failed. Starting rollback to Blue.'
 
-        always {
-            echo 'Pipeline execution finished.'
+        sshagent(credentials: ['app-server-ssh']) {
+            sh '''
+                ssh -o BatchMode=yes \
+                    ubuntu@$172.31.1.224 \
+                    "sudo /opt/blue-green/rollback.sh blue" \
+                    || echo "Automatic rollback command failed. Check Application EC2."
+            '''
         }
     }
+
+    always {
+        echo 'Pipeline execution finished.'
+    }
+}
 }
