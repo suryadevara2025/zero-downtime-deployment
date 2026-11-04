@@ -71,8 +71,8 @@ pipeline {
     steps {
         sshagent(credentials: ['app-server-ssh']) {
             sh '''
-                ssh -o BatchMode=yes \
-                -o StrictHostKeyChecking=no \
+                ssh -o StrictHostKeyChecking=no \
+                -o BatchMode=yes \
                 ubuntu@172.31.1.224 \
                 "bash /opt/blue-green/deploy-candidate.sh ${IMAGE_TAG} ${AWS_ACCOUNT_ID}"
             '''
