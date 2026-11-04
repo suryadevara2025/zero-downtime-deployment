@@ -79,7 +79,19 @@ pipeline {
         }
     }
 }
+       stage('Switch Traffic to Green') {
+    steps {
+        sshagent(credentials: ['app-server-ssh']) {
+            sh '''
+                ssh -o BatchMode=yes \
+                    ubuntu@${172.31.1.224} \
+                    "sudo /opt/blue-green/switch-traffic.sh green"
+            '''
+        }
+    }
 }
+}
+
     post {
         success {
             echo 'CI Pipeline completed successfully. Docker image pushed to ECR.'
