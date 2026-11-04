@@ -32,9 +32,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '''
-                    .venv/bin/pytest -v
-                '''
+                sh 'PYTHONPATH="$WORKSPACE" .venv/bin/python -m pytest -v'
             }
         }
 
