@@ -59,8 +59,8 @@ pipeline {
             }
         }
 
-        stage('Docker Push') {
-            steps {
+        stage('Docker Push') { 
+           steps {
                 sh '''
                     docker push ${ECR_IMAGE}:${IMAGE_TAG}
                     docker push ${ECR_IMAGE}:latest
@@ -72,12 +72,13 @@ pipeline {
         sshagent(credentials: ['app-server-ssh']) {
             sh '''
                 ssh -o BatchMode=yes \
-                    ubuntu@${172.31.1.224} \
-                    "bash /opt/blue-green/deploy-candidate.sh ${IMAGE_TAG} ${AWS_ACCOUNT_ID}"
+                -o StrictHostKeyChecking=no \
+                ubuntu@172.31.1.224 \
+                "bash /opt/blue-green/deploy-candidate.sh ${IMAGE_TAG} ${AWS_ACCOUNT_ID}"
             '''
         }
     }
-  }
+}
 }
     post {
         success {
