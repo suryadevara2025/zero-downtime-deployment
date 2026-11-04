@@ -83,8 +83,9 @@ pipeline {
     steps {
         sshagent(credentials: ['app-server-ssh']) {
             sh '''
-                ssh -o BatchMode=yes \
-                    ubuntu@$172.31.1.224 \
+                ssh -o StrictHostKeyChecking=no \
+                    -o BatchMode=yes \
+                    ubuntu@172.31.1.224 \
                     "sudo /opt/blue-green/switch-traffic.sh green"
             '''
         }
