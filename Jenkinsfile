@@ -102,14 +102,7 @@ pipeline {
         }
     }
 }
-       stage('Simulate Deployment Failure') {
-    steps {
-        sh '''
-            echo "Simulating application deployment failure"
-            exit 1
-        '''
-    }
-}
+
 }
 
     post {
